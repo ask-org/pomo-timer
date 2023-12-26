@@ -10,7 +10,7 @@ class TimerPage extends StatefulWidget {
 
 class _TimerPageState extends State<TimerPage> {
   late Timer _timer;
-  int _totalSeconds = 120; // Initial time in seconds (2 minutes)
+  int _totalSeconds = 120;
   bool _isTimerRunning = false;
 
   @override
@@ -37,6 +37,14 @@ class _TimerPageState extends State<TimerPage> {
     _isTimerRunning = !_isTimerRunning;
   }
 
+  void _resetTimer() {
+    _timer.cancel();
+    setState(() {
+      _totalSeconds = 120;
+      _isTimerRunning = false;
+    });
+  }
+
   String _formatTime(int seconds) {
     int minutes = seconds ~/ 60;
     int remainingSeconds = seconds % 60;
@@ -52,20 +60,40 @@ class _TimerPageState extends State<TimerPage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double timerFontSize = screenWidth * 0.2; // Adjust the multiplier as needed
+    double timerFontSize = screenWidth * 0.3;
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: GestureDetector(
-        onTap: _toggleTimer,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              _formatTime(_totalSeconds),
-              style: TextStyle(fontSize: timerFontSize, color: Colors.white),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: _toggleTimer,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  _formatTime(_totalSeconds),
+                  style: TextStyle(
+                    fontSize: timerFontSize,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
+              ),
             ),
-          ),
+            SizedBox(height: 20),
+            Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: _resetTimer,
+                child: Text('Reset Timer'),
+                style: ElevatedButton.styleFrom(
+                  textStyle: TextStyle(fontWeight: FontWeight.normal),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
