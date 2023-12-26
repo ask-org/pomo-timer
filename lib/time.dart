@@ -10,12 +10,14 @@ class TimerPage extends StatefulWidget {
 
 class _TimerPageState extends State<TimerPage> {
   late Timer _timer;
-  int _totalSeconds = 120;
+  final int _defaultTime = 1200;
+  int _totalSeconds = 0;
   bool _isTimerRunning = false;
 
   @override
   void initState() {
     super.initState();
+    _totalSeconds = _defaultTime;
   }
 
   void _toggleTimer() {
@@ -40,7 +42,7 @@ class _TimerPageState extends State<TimerPage> {
   void _resetTimer() {
     _timer.cancel();
     setState(() {
-      _totalSeconds = 120;
+      _totalSeconds = _defaultTime;
       _isTimerRunning = false;
     });
   }
@@ -82,15 +84,15 @@ class _TimerPageState extends State<TimerPage> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Align(
               alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: _resetTimer,
-                child: Text('Reset Timer'),
                 style: ElevatedButton.styleFrom(
-                  textStyle: TextStyle(fontWeight: FontWeight.normal),
+                  textStyle: const TextStyle(fontWeight: FontWeight.normal),
                 ),
+                child: const Text('Reset Timer'),
               ),
             ),
           ],
