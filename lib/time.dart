@@ -36,7 +36,9 @@ class _TimerPageState extends State<TimerPage> {
         });
       });
     }
-    _isTimerRunning = !_isTimerRunning;
+    setState(() {
+      _isTimerRunning = !_isTimerRunning;
+    });
   }
 
   void _resetTimer() {
@@ -65,7 +67,8 @@ class _TimerPageState extends State<TimerPage> {
     double timerFontSize = screenWidth * 0.3;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor:
+          _isTimerRunning ? Colors.black : Color.fromARGB(255, 35, 43, 43),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
