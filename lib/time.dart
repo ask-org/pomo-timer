@@ -6,6 +6,7 @@ class TimerPage extends StatefulWidget {
   const TimerPage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _TimerPageState createState() => _TimerPageState();
 }
 
@@ -65,14 +66,13 @@ class _TimerPageState extends State<TimerPage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     double timerFontSize = screenWidth * 0.3;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-      ),
-      backgroundColor:
-          _isTimerRunning ? Colors.black : Color.fromARGB(255, 35, 43, 43),
+      backgroundColor: _isTimerRunning
+          ? Colors.black
+          : const Color.fromARGB(255, 35, 43, 43),
       body: Stack(
         children: [
           Center(
@@ -108,25 +108,28 @@ class _TimerPageState extends State<TimerPage> {
             ),
           ),
           Positioned(
-            right: 10,
-            child: IconButton(
-              icon: CircleAvatar(
-                backgroundColor: Colors.grey[900],
-                radius: 20,
-                child: const Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AddTask(),
-                  ),
-                );
-              },
-            ),
+            right: screenWidth * 0.05,
+            top: screenHeight * 0.05,
+            child: _isTimerRunning == false
+                ? IconButton(
+                    icon: CircleAvatar(
+                      backgroundColor: Colors.grey[900],
+                      radius: 20,
+                      child: const Icon(
+                        Icons.settings,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AddTask(),
+                        ),
+                      );
+                    },
+                  )
+                : Container(),
           ),
         ],
       ),
