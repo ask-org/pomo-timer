@@ -36,49 +36,92 @@ class _AddTaskState extends State<AddTask> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Container(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context, tasks);
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SetTimer(),
-                  ),
-                );
-              },
-            ),
-            SizedBox(height: 20.0),
-            Expanded(
-              child: ListView.builder(
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      'Time: ${formatTime(tasks[index].time)},    Task: ${tasks[index].title}',
-                      style: TextStyle(color: Colors.white, fontSize: 20.0),
+      body: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.05, vertical: screenHeight * 0.15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Tasks',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 40.0,
+                            fontWeight: FontWeight.bold)),
+                    IconButton(
+                      icon: CircleAvatar(
+                        backgroundColor: Colors.grey[900],
+                        radius: 16,
+                        child: const Icon(
+                          Icons.info_outline,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SetTimer(),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
+                  ],
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: tasks.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              tasks[index].title,
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 20.0),
+                            ),
+                            Text(
+                              formatTime(tasks[index].time),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 20.0),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Positioned(
+              left: screenWidth * 0.05,
+              right: screenHeight * 0.05,
+              top: screenHeight * 0.05,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context, tasks);
+                    },
+                  ),
+                ],
+              )),
+        ],
       ),
     );
   }
