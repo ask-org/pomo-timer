@@ -108,15 +108,16 @@ class _TimerPageState extends State<TimerPage> {
             ),
           ),
           Positioned(
+            left: screenWidth * 0.05,
             right: screenWidth * 0.05,
-            top: screenHeight * 0.05,
+            top: screenHeight * 0.06,
             child: _isTimerRunning == false
                 ? IconButton(
                     icon: CircleAvatar(
                       backgroundColor: Colors.grey[900],
                       radius: 20,
                       child: const Icon(
-                        Icons.settings,
+                        Icons.edit,
                         color: Colors.white,
                       ),
                     ),

@@ -38,6 +38,7 @@ class _AddTaskState extends State<AddTask> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    double timerFontSize = screenWidth * 0.3;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -61,7 +62,7 @@ class _AddTaskState extends State<AddTask> {
                         backgroundColor: Colors.grey[900],
                         radius: 16,
                         child: const Icon(
-                          Icons.info_outline,
+                          Icons.add,
                           color: Colors.white,
                         ),
                       ),
@@ -105,8 +106,8 @@ class _AddTaskState extends State<AddTask> {
           ),
           Positioned(
               left: screenWidth * 0.05,
-              right: screenHeight * 0.05,
-              top: screenHeight * 0.05,
+              right: screenWidth * 0.05,
+              top: screenHeight * 0.06,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

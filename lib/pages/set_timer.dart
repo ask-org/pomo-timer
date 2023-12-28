@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,8 @@ class SetTimer extends StatefulWidget {
 class SetTimerState extends State<SetTimer> {
   TextEditingController taskController = TextEditingController();
   int seconds = 60;
+
+  var timer;
 
   String formatTime(int seconds) {
     int minutes = seconds ~/ 60;
@@ -39,80 +42,107 @@ class SetTimerState extends State<SetTimer> {
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     double timerFontSize = screenWidth * 0.3;
 
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: ElevatedButton(
-          onLongPress: () async {
-            await todoTasks.setString("tasks", taskController.text);
-          },
-          onPressed: () {
-            saveAndPop(context);
-            log(taskController.text);
-            log(seconds.toString());
-          },
-          child: Text("<"),
-        ),
-        actions: [
-          Text(
-            taskController.text,
-            style: TextStyle(color: Colors.white),
-          )
-        ],
-      ),
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(
-                  child: Text(
-                    "<",
-                    style: TextStyle(color: Colors.white, fontSize: 50),
-                  ),
-                  onPressed: () {
-                    if (seconds > 0) {
-                      setState(() {
-                        seconds -= 60;
-                      });
-                    }
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          if (seconds > 0) {
+                            setState(() {
+                              seconds -= 60;
+                            });
+                          }
+                        },
+                        icon:
+                            const Icon(Icons.arrow_left, color: Colors.white)),
+                    Text(
+                      formatTime(seconds),
+                      style: TextStyle(
+                        fontSize: timerFontSize,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w100,
+                      ),
+                    ),
+                    // tif someone clicks on the arrow it will add 60 seconds, holding the button will keep increasing 60 seconds every 0.5 seconds only if the button is held
+                    IconButton(
+                        onPressed: () {
+                          if (seconds < 99 * 60) {
+                            setState(() {
+                              seconds += 60;
+                            });
+                          }
+                        },
+                        icon:
+                            const Icon(Icons.arrow_right, color: Colors.white)),
+                  ],
                 ),
-                Text(
-                  formatTime(seconds),
-                  style:
-                      TextStyle(color: Colors.white, fontSize: timerFontSize),
-                ),
-                TextButton(
-                  child: Text(
-                    ">",
-                    style: TextStyle(color: Colors.white, fontSize: 50),
+                SizedBox(
+                  width: screenWidth * 0.8,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Enter task',
+                      hintStyle: TextStyle(
+                        fontSize: timerFontSize * 0.2,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w100,
+                      ),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    controller: taskController,
                   ),
-                  onPressed: () {
-                    if (seconds < 99 * 60) {
-                      setState(() {
-                        seconds += 60;
-                      });
-                    }
-                  },
                 ),
               ],
             ),
-            Container(
-              width: screenWidth * 0.5,
-              child: TextFormField(
-                  controller: taskController,
-                  style: TextStyle(color: Colors.white, fontSize: 40)),
-            ),
-          ],
-        ),
+          ),
+          Positioned(
+              left: screenWidth * 0.05,
+              right: screenWidth * 0.05,
+              top: screenHeight * 0.06,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      log(taskController.text);
+                      log(seconds.toString());
+                    },
+                  ),
+                  // save button
+                  IconButton(
+                    icon: const Icon(
+                      Icons.save,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      saveAndPop(context);
+                      log(taskController.text);
+                      log(seconds.toString());
+                    },
+                  ),
+                ],
+              )),
+        ],
       ),
     );
   }
