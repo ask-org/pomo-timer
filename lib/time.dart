@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:pomo_timer/pages/add_task.dart';
 
 class TimerPage extends StatefulWidget {
   const TimerPage({Key? key}) : super(key: key);
@@ -67,6 +68,23 @@ class _TimerPageState extends State<TimerPage> {
     double timerFontSize = screenWidth * 0.3;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddTask(),
+              ),
+            );
+          },
+        ),
+      ),
       backgroundColor:
           _isTimerRunning ? Colors.black : Color.fromARGB(255, 35, 43, 43),
       body: Center(
