@@ -12,7 +12,7 @@ class TimerPage extends StatefulWidget {
 
 class _TimerPageState extends State<TimerPage> {
   late Timer _timer;
-  final int _defaultTime = 1200;
+  final int _defaultTime = 20;
   int _totalSeconds = 0;
   bool _isTimerRunning = false;
 

@@ -10,7 +10,23 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
-  late List<TaskModel> tasks = [];
+  late List<TaskModel> tasks = [
+    TaskModel(time: 20, title: 'Task 1'),
+    TaskModel(time: 30, title: 'Task 2'),
+    TaskModel(time: 40, title: 'Task 3'),
+    TaskModel(time: 50, title: 'Task 4'),
+    TaskModel(time: 60, title: 'Task 5'),
+    TaskModel(time: 20, title: 'Task 1'),
+    TaskModel(time: 30, title: 'Task 2'),
+    TaskModel(time: 40, title: 'Task 3'),
+    TaskModel(time: 50, title: 'Task 4'),
+    TaskModel(time: 60, title: 'Task 5'),
+    TaskModel(time: 20, title: 'Task 1'),
+    TaskModel(time: 30, title: 'Task 2'),
+    TaskModel(time: 40, title: 'Task 3'),
+    TaskModel(time: 50, title: 'Task 4'),
+    TaskModel(time: 60, title: 'Task 5'),
+  ];
 
   String formatTime(int seconds) {
     int minutes = seconds ~/ 60;
