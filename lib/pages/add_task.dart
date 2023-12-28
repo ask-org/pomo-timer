@@ -38,7 +38,6 @@ class _AddTaskState extends State<AddTask> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    double timerFontSize = screenWidth * 0.3;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
