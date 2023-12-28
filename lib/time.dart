@@ -70,54 +70,65 @@ class _TimerPageState extends State<TimerPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddTask(),
-              ),
-            );
-          },
-        ),
       ),
       backgroundColor:
           _isTimerRunning ? Colors.black : Color.fromARGB(255, 35, 43, 43),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: _toggleTimer,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text(
-                  _formatTime(_totalSeconds),
-                  style: TextStyle(
-                    fontSize: timerFontSize,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w100,
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: _toggleTimer,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      _formatTime(_totalSeconds),
+                      style: TextStyle(
+                        fontSize: timerFontSize,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w100,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Align(
-              alignment: Alignment.center,
-              child: ElevatedButton(
-                onPressed: _resetTimer,
-                style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(fontWeight: FontWeight.normal),
+                const SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    onPressed: _resetTimer,
+                    style: ElevatedButton.styleFrom(
+                      textStyle: const TextStyle(fontWeight: FontWeight.normal),
+                    ),
+                    child: const Text('Reset Timer'),
+                  ),
                 ),
-                child: const Text('Reset Timer'),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Positioned(
+            right: 10,
+            child: IconButton(
+              icon: CircleAvatar(
+                backgroundColor: Colors.grey[900],
+                radius: 20,
+                child: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddTask(),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
