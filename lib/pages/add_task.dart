@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pomo_timer/models/tasks_model.dart';
 import 'package:pomo_timer/pages/set_timer.dart';
+import 'package:pomo_timer/time.dart';
 
 class AddTask extends StatefulWidget {
   const AddTask({super.key});
@@ -81,20 +82,32 @@ class _AddTaskState extends State<AddTask> {
                     itemCount: tasks.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              tasks[index].title,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 20.0),
-                            ),
-                            Text(
-                              formatTime(tasks[index].time),
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 20.0),
-                            ),
-                          ],
+                        title: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TimerPage(
+                                        task: tasks[index].title,
+                                        time: tasks[index].time,
+                                      )),
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                tasks[index].title,
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 20.0),
+                              ),
+                              Text(
+                                formatTime(tasks[index].time),
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 20.0),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },

@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:pomo_timer/pages/add_task.dart';
 
 class TimerPage extends StatefulWidget {
-  const TimerPage({Key? key}) : super(key: key);
+  // take a few other parameters like title, description, etc. in the constructor
+  const TimerPage({this.task, this.time}) : super(key: null);
+  // const TimerPage({Key? key}) : super(key: key);
+  final String? task;
+  final int? time;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -12,14 +16,14 @@ class TimerPage extends StatefulWidget {
 
 class _TimerPageState extends State<TimerPage> {
   late Timer _timer;
-  final int _defaultTime = 20;
+  static const _defaultTime = 2000;
   int _totalSeconds = 0;
   bool _isTimerRunning = false;
 
   @override
   void initState() {
     super.initState();
-    _totalSeconds = _defaultTime;
+    _totalSeconds = widget.time ?? _defaultTime;
   }
 
   void _toggleTimer() {
@@ -94,16 +98,16 @@ class _TimerPageState extends State<TimerPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.center,
-                  child: ElevatedButton(
-                    onPressed: _resetTimer,
-                    style: ElevatedButton.styleFrom(
-                      textStyle: const TextStyle(fontWeight: FontWeight.normal),
-                    ),
-                    child: const Text('Reset Timer'),
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.center,
+                //   child: ElevatedButton(
+                //     onPressed: _resetTimer,
+                //     style: ElevatedButton.styleFrom(
+                //       textStyle: const TextStyle(fontWeight: FontWeight.normal),
+                //     ),
+                //     child: const Text('Reset Timer'),
+                //   ),
+                // ),
               ],
             ),
           ),
