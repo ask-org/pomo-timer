@@ -108,7 +108,6 @@ class _TimerPageState extends State<TimerPage> {
             ),
           ),
           Positioned(
-            left: screenWidth * 0.05,
             right: screenWidth * 0.05,
             top: screenHeight * 0.06,
             child: _isTimerRunning == false
