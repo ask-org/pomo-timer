@@ -1,6 +1,10 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:pomo_timer/models/tasks_model.dart';
+import 'package:pomo_timer/models/tasks_service.dart';
 
 class SetTimer extends StatefulWidget {
   const SetTimer({super.key});
@@ -10,35 +14,32 @@ class SetTimer extends StatefulWidget {
 }
 
 class SetTimerState extends State<SetTimer> {
+  TasksService _tasksService = TasksService();
   TextEditingController taskController = TextEditingController();
-  int seconds = 60;
+  int time = 60;
 
-  String formatTime(int seconds) {
-    int minutes = seconds ~/ 60;
-    int remainingSeconds = seconds % 60;
+  String formatTime(int time) {
+    int minutes = time ~/ 60;
+    int remainingSeconds = time % 60;
     return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
-  void saveAndPop(BuildContext context) {
-    String task = taskController.text.trim();
-    if (seconds >= 60 && task.isNotEmpty) {
-      Navigator.pop(context, {'time': seconds, 'task': task});
+  void saveAndPop(BuildContext context) async {
+    String title = taskController.text.trim();
+    if (time >= 60 && title.isNotEmpty) {
+      var tasks = TaskModel(time: time, title: title);
+      await _tasksService.addTask(tasks);
+      print('Info retrieved from box: $time');
+      print('Info retrieved from box: $title');
+      Navigator.pop(context);
+      print("What the fuzz ${tasks}");
     } else {
+      // Navigator.of(context).pop();
       Navigator.pop(context);
     }
   }
 
-  late SharedPreferences todoTasks;
-  getInstance() async {
-    todoTasks = await SharedPreferences.getInstance();
-  }
-
   @override
-  void initState() {
-    getInstance();
-    super.initState();
-  }
-
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double timerFontSize = screenWidth * 0.3;
@@ -49,12 +50,12 @@ class SetTimerState extends State<SetTimer> {
         backgroundColor: Colors.black,
         leading: ElevatedButton(
           onLongPress: () async {
-            await todoTasks.setString("tasks", taskController.text);
+            await Hive.box('task_box').put('title', taskController.text);
           },
-          onPressed: () {
+          onPressed: () async {
             saveAndPop(context);
             log(taskController.text);
-            log(seconds.toString());
+            log(time.toString());
           },
           child: Text("<"),
         ),
@@ -78,15 +79,15 @@ class SetTimerState extends State<SetTimer> {
                     style: TextStyle(color: Colors.white, fontSize: 50),
                   ),
                   onPressed: () {
-                    if (seconds > 0) {
+                    if (time > 0) {
                       setState(() {
-                        seconds -= 60;
+                        time -= 60;
                       });
                     }
                   },
                 ),
                 Text(
-                  formatTime(seconds),
+                  formatTime(time),
                   style:
                       TextStyle(color: Colors.white, fontSize: timerFontSize),
                 ),
@@ -96,9 +97,9 @@ class SetTimerState extends State<SetTimer> {
                     style: TextStyle(color: Colors.white, fontSize: 50),
                   ),
                   onPressed: () {
-                    if (seconds < 99 * 60) {
+                    if (time < 99 * 60) {
                       setState(() {
-                        seconds += 60;
+                        time += 60;
                       });
                     }
                   },
