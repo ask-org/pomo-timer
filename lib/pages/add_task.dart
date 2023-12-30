@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:pomo_timer/models/tasks_model.dart';
+import 'package:pomo_timer/models/tasks_service.dart';
 import 'package:pomo_timer/pages/set_timer.dart';
+import 'package:pomo_timer/widgets/task_list.dart';
 
 class AddTask extends StatefulWidget {
   const AddTask({super.key});
@@ -10,7 +14,7 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
-  late List<TaskModel> tasks = [];
+  final TasksService _tasksService = TasksService();
 
   String formatTime(int seconds) {
     int minutes = seconds ~/ 60;
@@ -18,52 +22,32 @@ class _AddTaskState extends State<AddTask> {
     return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
+  void openBox() async {
+    await Hive.openBox<TaskModel>('taskBox');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    openBox();
+  }
+
   @override
   Widget build(BuildContext context) {
+    double deviceHeight = MediaQuery.of(context).size.height;
+    double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Container(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context, tasks);
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SetTimer(),
-                  ),
-                );
-              },
-            ),
-            SizedBox(height: 20.0),
-            Expanded(
-              child: ListView.builder(
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      'Time: ${formatTime(tasks[index].time)},    Task: ${tasks[index].title}',
-                      style: TextStyle(color: Colors.white, fontSize: 20.0),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+        backgroundColor: Colors.black,
+        body: FutureBuilder(
+            future: _tasksService.getAllTask(),
+            builder: (BuildContext context,
+                AsyncSnapshot<List<TaskModel>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return TaskList(context, deviceHeight, deviceWidth, formatTime,
+                    _tasksService);
+              } else {
+                return CircularProgressIndicator();
+              }
+            }));
   }
 }

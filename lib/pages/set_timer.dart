@@ -1,6 +1,9 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
+import 'package:pomo_timer/models/tasks_model.dart';
+import 'package:pomo_timer/models/tasks_service.dart';
 
 class SetTimer extends StatefulWidget {
   const SetTimer({super.key});
@@ -10,35 +13,35 @@ class SetTimer extends StatefulWidget {
 }
 
 class SetTimerState extends State<SetTimer> {
+  TasksService _tasksService = TasksService();
   TextEditingController taskController = TextEditingController();
-  int seconds = 60;
+  int time = 60;
 
-  String formatTime(int seconds) {
-    int minutes = seconds ~/ 60;
-    int remainingSeconds = seconds % 60;
+  String formatTime(int time) {
+    int minutes = time ~/ 60;
+    int remainingSeconds = time % 60;
     return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
-  void saveAndPop(BuildContext context) {
-    String task = taskController.text.trim();
-    if (seconds >= 60 && task.isNotEmpty) {
-      Navigator.pop(context, {'time': seconds, 'task': task});
+  void saveAndPop(BuildContext context) async {
+    String title = taskController.text.trim();
+    if (time >= 60 && title.isNotEmpty) {
+      var tasks = TaskModel(time: time, title: title);
+      await _tasksService.addTask(tasks);
+      print('Info retrieved from box: $time');
+      print('Info retrieved from box: $title');
     } else {
-      Navigator.pop(context);
+      print("the fuzz there is nothing");
     }
   }
 
-  late SharedPreferences todoTasks;
-  getInstance() async {
-    todoTasks = await SharedPreferences.getInstance();
+  @override
+  void dispose() {
+    taskController.dispose();
+    super.dispose();
   }
 
   @override
-  void initState() {
-    getInstance();
-    super.initState();
-  }
-
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double timerFontSize = screenWidth * 0.3;
@@ -48,21 +51,38 @@ class SetTimerState extends State<SetTimer> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: ElevatedButton(
-          onLongPress: () async {
-            await todoTasks.setString("tasks", taskController.text);
+          onPressed: () async {
+            Navigator.pop(context);
           },
-          onPressed: () {
-            saveAndPop(context);
-            log(taskController.text);
-            log(seconds.toString());
-          },
-          child: Text("<"),
+          child: Text(
+            "<",
+            style: TextStyle(fontSize: 30),
+          ),
         ),
         actions: [
           Text(
             taskController.text,
             style: TextStyle(color: Colors.white),
-          )
+          ),
+          // save button
+          IconButton(
+            icon: const Icon(
+              Icons.save,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              saveAndPop(context);
+              log(taskController.text);
+              log(time.toString());
+            },
+            // onPressed: () async {
+            //   if (taskController.text.isNotEmpty) {
+            //     var tasks = TaskModel(time: time, title: taskController.text);
+            //     await _tasksService.addTask(tasks);
+            //   }
+            //   Navigator.of(context).pop();
+            // },
+          ),
         ],
       ),
       body: Container(
@@ -78,15 +98,15 @@ class SetTimerState extends State<SetTimer> {
                     style: TextStyle(color: Colors.white, fontSize: 50),
                   ),
                   onPressed: () {
-                    if (seconds > 0) {
+                    if (time > 0) {
                       setState(() {
-                        seconds -= 60;
+                        time -= 60;
                       });
                     }
                   },
                 ),
                 Text(
-                  formatTime(seconds),
+                  formatTime(time),
                   style:
                       TextStyle(color: Colors.white, fontSize: timerFontSize),
                 ),
@@ -96,9 +116,9 @@ class SetTimerState extends State<SetTimer> {
                     style: TextStyle(color: Colors.white, fontSize: 50),
                   ),
                   onPressed: () {
-                    if (seconds < 99 * 60) {
+                    if (time < 99 * 60) {
                       setState(() {
-                        seconds += 60;
+                        time += 60;
                       });
                     }
                   },
