@@ -1,6 +1,9 @@
-import 'dart:developer';
+// import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:hive/hive.dart';
+import 'package:pomo_timer/models/tasks_model.dart';
+import 'package:pomo_timer/models/tasks_service.dart';
 
 class SetTimer extends StatefulWidget {
   const SetTimer({super.key});
@@ -10,35 +13,30 @@ class SetTimer extends StatefulWidget {
 }
 
 class SetTimerState extends State<SetTimer> {
+  final TasksService _tasksService = TasksService();
   TextEditingController taskController = TextEditingController();
   int seconds = 60;
 
-  var timer;
-
-  String formatTime(int seconds) {
-    int minutes = seconds ~/ 60;
-    int remainingSeconds = seconds % 60;
+  String formatTime(int time) {
+    int minutes = time ~/ 60;
+    int remainingSeconds = time % 60;
     return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
-  void saveAndPop(BuildContext context) {
-    String task = taskController.text.trim();
-    if (seconds >= 60 && task.isNotEmpty) {
-      Navigator.pop(context, {'time': seconds, 'task': task});
-    } else {
-      Navigator.pop(context);
-    }
-  }
-
-  late SharedPreferences todoTasks;
-  getInstance() async {
-    todoTasks = await SharedPreferences.getInstance();
+  void saveAndPop(BuildContext context) async {
+    Navigator.pop(context);
+    String title = taskController.text.trim();
+    // if (seconds >= 60 && title.isNotEmpty) {
+    var tasks =
+        TaskModel(time: seconds, title: title.isNotEmpty ? title : 'Untitled');
+    await _tasksService.addTask(tasks);
+    // }
   }
 
   @override
-  void initState() {
-    getInstance();
-    super.initState();
+  void dispose() {
+    taskController.dispose();
+    super.dispose();
   }
 
   @override
@@ -49,49 +47,102 @@ class SetTimerState extends State<SetTimer> {
 
     return Scaffold(
       backgroundColor: Colors.black,
+      // appBar: AppBar(
+      //   backgroundColor: Colors.black,
+      //   leading: ElevatedButton(
+      //     onPressed: () async {
+      //       Navigator.pop(context);
+      //     },
+      //     child: Text(
+      //       "<",
+      //       style: TextStyle(fontSize: 30),
+      //     ),
+      //   ),
+      //   actions: [
+      //     Text(
+      //       taskController.text,
+      //       style: TextStyle(color: Colors.white),
+      //     ),
+      //     // save button
+      //     IconButton(
+      //       icon: const Icon(
+      //         Icons.save,
+      //         color: Colors.white,
+      //       ),
+      //       onPressed: () {
+      //         saveAndPop(context);
+      //         log(taskController.text);
+      //         log(seconds.toString());
+      //       },
+      //       // onPressed: () async {
+      //       //   if (taskController.text.isNotEmpty) {
+      //       //     var tasks = TaskModel(time: time, title: taskController.text);
+      //       //     await _tasksService.addTask(tasks);
+      //       //   }
+      //       //   Navigator.of(context).pop();
+      //       // },
+      //     ),
+      //   ],
+      // ),
       body: Stack(
         children: [
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Stack(
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                        onPressed: () {
-                          if (seconds > 0) {
-                            setState(() {
-                              seconds -= 60;
-                            });
-                          }
-                        },
-                        icon:
-                            const Icon(Icons.arrow_left, color: Colors.white)),
-                    Text(
-                      formatTime(seconds),
-                      style: TextStyle(
-                        fontSize: timerFontSize,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w100,
+                    Center(
+                      child: Text(
+                        formatTime(seconds),
+                        style: TextStyle(
+                          fontSize: timerFontSize,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w100,
+                        ),
                       ),
                     ),
-                    // tif someone clicks on the arrow it will add 60 seconds, holding the button will keep increasing 60 seconds every 0.5 seconds only if the button is held
-                    IconButton(
-                        onPressed: () {
-                          if (seconds < 99 * 60) {
-                            setState(() {
-                              seconds += 60;
-                            });
-                          }
-                        },
-                        icon:
-                            const Icon(Icons.arrow_right, color: Colors.white)),
+                    Positioned(
+                      top: screenHeight * 0.083,
+                      left: screenWidth * 0.03,
+                      right: screenWidth * 0.03,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                if (seconds > 0) {
+                                  setState(() {
+                                    seconds -= 60;
+                                  });
+                                }
+                              },
+                              icon: const Icon(Icons.arrow_left,
+                                  color: Colors.white)),
+                          IconButton(
+                              onPressed: () {
+                                if (seconds < 99 * 60) {
+                                  setState(() {
+                                    seconds += 60;
+                                  });
+                                }
+                              },
+                              icon: const Icon(Icons.arrow_right,
+                                  color: Colors.white)),
+                        ],
+                      ),
+                    )
                   ],
                 ),
                 SizedBox(
                   width: screenWidth * 0.8,
                   child: TextFormField(
+                    style: TextStyle(
+                      fontSize: timerFontSize * 0.2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w100,
+                    ),
                     decoration: InputDecoration(
                       hintText: 'Enter task',
                       hintStyle: TextStyle(
@@ -109,6 +160,47 @@ class SetTimerState extends State<SetTimer> {
               ],
             ),
           ),
+          // Column(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Row(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         TextButton(
+          //           child: Text(
+          //             "<",
+          //             style: TextStyle(color: Colors.white, fontSize: 50),
+          //           ),
+          //           onPressed: () {
+          //             if (seconds > 60) {
+          //               setState(() {
+          //                 seconds -= 60;
+          //               });
+          //             }
+          //           },
+          //         ),
+          //         Text(
+          //           formatTime(seconds),
+          //           style:
+          //               TextStyle(color: Colors.white, fontSize: timerFontSize),
+          //         ),
+          //         TextButton(
+          //           child: Text(
+          //             ">",
+          //             style: TextStyle(color: Colors.white, fontSize: 50),
+          //           ),
+          //           onPressed: () {
+          //             if (seconds < 99 * 60) {
+          //               setState(() {
+          //                 seconds += 60;
+          //               });
+          //             }
+          //           },
+          //         ),
+          //       ],
+          //     ),
+          //   ],
+          // ),
           Positioned(
               left: screenWidth * 0.05,
               right: screenWidth * 0.05,
@@ -123,8 +215,8 @@ class SetTimerState extends State<SetTimer> {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
-                      log(taskController.text);
-                      log(seconds.toString());
+                      // log(taskController.text);
+                      // log(seconds.toString());
                     },
                   ),
                   // save button
@@ -135,8 +227,8 @@ class SetTimerState extends State<SetTimer> {
                     ),
                     onPressed: () {
                       saveAndPop(context);
-                      log(taskController.text);
-                      log(seconds.toString());
+                      // log(taskController.text);
+                      // log(seconds.toString());
                     },
                   ),
                 ],
