@@ -93,13 +93,48 @@ class SetTimerState extends State<SetTimer> {
                 Stack(
                   // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Center(
-                      child: Text(
-                        formatTime(seconds),
-                        style: TextStyle(
-                          fontSize: timerFontSize,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w100,
+                    GestureDetector(
+                      // if someone drags there hand vertically on the timer, it should increatase the time and vice versa,  if someone drags there hand horizontally on the timer, it should increatase the time and vice versa
+                      onVerticalDragUpdate: (details) {
+                        if (details.delta.dy > 0) {
+                          if (seconds > 60) {
+                            setState(() {
+                              seconds -= 60;
+                            });
+                          }
+                        } else {
+                          if (seconds < 99 * 60) {
+                            setState(() {
+                              seconds += 60;
+                            });
+                          }
+                        }
+                      },
+                      onHorizontalDragUpdate: (details) {
+                        if (details.delta.dx > 0) {
+                          print(details.delta.dx);
+                          if (seconds < 99 * 60) {
+                            setState(() {
+                              seconds += 60;
+                            });
+                          }
+                        } else {
+                          if (seconds > 60) {
+                            setState(() {
+                              seconds -= 60;
+                            });
+                          }
+                        }
+                      },
+
+                      child: Center(
+                        child: Text(
+                          formatTime(seconds),
+                          style: TextStyle(
+                            fontSize: timerFontSize,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w100,
+                          ),
                         ),
                       ),
                     ),
@@ -112,7 +147,7 @@ class SetTimerState extends State<SetTimer> {
                         children: [
                           IconButton(
                               onPressed: () {
-                                if (seconds > 0) {
+                                if (seconds > 60) {
                                   setState(() {
                                     seconds -= 60;
                                   });
@@ -160,47 +195,6 @@ class SetTimerState extends State<SetTimer> {
               ],
             ),
           ),
-          // Column(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     Row(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: [
-          //         TextButton(
-          //           child: Text(
-          //             "<",
-          //             style: TextStyle(color: Colors.white, fontSize: 50),
-          //           ),
-          //           onPressed: () {
-          //             if (seconds > 60) {
-          //               setState(() {
-          //                 seconds -= 60;
-          //               });
-          //             }
-          //           },
-          //         ),
-          //         Text(
-          //           formatTime(seconds),
-          //           style:
-          //               TextStyle(color: Colors.white, fontSize: timerFontSize),
-          //         ),
-          //         TextButton(
-          //           child: Text(
-          //             ">",
-          //             style: TextStyle(color: Colors.white, fontSize: 50),
-          //           ),
-          //           onPressed: () {
-          //             if (seconds < 99 * 60) {
-          //               setState(() {
-          //                 seconds += 60;
-          //               });
-          //             }
-          //           },
-          //         ),
-          //       ],
-          //     ),
-          //   ],
-          // ),
           Positioned(
               left: screenWidth * 0.05,
               right: screenWidth * 0.05,

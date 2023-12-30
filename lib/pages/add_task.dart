@@ -127,6 +127,9 @@ class _AddTaskState extends State<AddTask> {
                                                 },
                                                 child: ListTile(
                                                   title: Text(tasks!.title,
+                                                      maxLines: 2,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       style: const TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.grey,
@@ -136,14 +139,6 @@ class _AddTaskState extends State<AddTask> {
                                                       style: const TextStyle(
                                                           fontSize: 14,
                                                           color: Colors.white)),
-                                                  trailing: IconButton(
-                                                      onPressed: () {
-                                                        _tasksService
-                                                            .deleteTask(index);
-                                                        // print("deleted");
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.delete)),
                                                 ),
                                               );
                                             });
