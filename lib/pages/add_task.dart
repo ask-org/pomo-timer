@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 // import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:pomo_timer/models/tasks_model.dart';
 import 'package:pomo_timer/models/tasks_service.dart';
 import 'package:pomo_timer/pages/set_timer.dart';
+import 'package:pomo_timer/time.dart';
 // // import 'package:pomo_timer/widgets/task_list.dart';
 // import 'package:pomo_timer/time.dart';
 
@@ -47,13 +50,12 @@ class _AddTaskState extends State<AddTask> {
                   right: screenWidth * 0.05,
                   top: screenHeight * 0.15,
                   bottom: screenHeight * 0.0),
-              //  vertical: screenHeight * 0.1),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Tasks",
                         style: TextStyle(
                             color: Colors.white,
@@ -89,7 +91,7 @@ class _AddTaskState extends State<AddTask> {
                               ConnectionState.done) {
                             return Column(
                               children: [
-                                Container(
+                                SizedBox(
                                   height: screenHeight * 0.65,
                                   // color: Colors.blue,
                                   width: screenWidth * 1,
@@ -102,18 +104,47 @@ class _AddTaskState extends State<AddTask> {
                                             itemCount: box.values.length,
                                             itemBuilder: (context, index) {
                                               var tasks = box.getAt(index);
-                                              return ListTile(
-                                                title: Text(tasks!.title),
-                                                leading: Text(
-                                                    formatTime(tasks.time)),
-                                                trailing: IconButton(
-                                                    onPressed: () {
-                                                      _tasksService
-                                                          .deleteTask(index);
-                                                      // print("deleted");
-                                                    },
-                                                    icon: const Icon(
-                                                        Icons.delete)),
+                                              return InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          TimerPage(
+                                                        task: tasks.title,
+                                                        time: tasks.time,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                onLongPress: () {
+                                                  Timer(
+                                                      const Duration(
+                                                          seconds: 1), () {
+                                                    _tasksService
+                                                        .deleteTask(index);
+                                                  });
+                                                },
+                                                child: ListTile(
+                                                  title: Text(tasks!.title,
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey,
+                                                      )),
+                                                  leading: Text(
+                                                      formatTime(tasks.time),
+                                                      style: const TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors.white)),
+                                                  trailing: IconButton(
+                                                      onPressed: () {
+                                                        _tasksService
+                                                            .deleteTask(index);
+                                                        // print("deleted");
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.delete)),
+                                                ),
                                               );
                                             });
                                       }),
