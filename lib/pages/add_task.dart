@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+// import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:pomo_timer/models/tasks_model.dart';
 import 'package:pomo_timer/models/tasks_service.dart';
 import 'package:pomo_timer/pages/set_timer.dart';
-import 'package:pomo_timer/widgets/task_list.dart';
+// // import 'package:pomo_timer/widgets/task_list.dart';
+// import 'package:pomo_timer/time.dart';
 
 class AddTask extends StatefulWidget {
   const AddTask({super.key});
@@ -34,20 +35,118 @@ class _AddTaskState extends State<AddTask> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceHeight = MediaQuery.of(context).size.height;
-    double deviceWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         backgroundColor: Colors.black,
-        body: FutureBuilder(
-            future: _tasksService.getAllTask(),
-            builder: (BuildContext context,
-                AsyncSnapshot<List<TaskModel>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return TaskList(context, deviceHeight, deviceWidth, formatTime,
-                    _tasksService);
-              } else {
-                return CircularProgressIndicator();
-              }
-            }));
+        body: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.only(
+                  left: screenWidth * 0.05,
+                  right: screenWidth * 0.05,
+                  top: screenHeight * 0.15,
+                  bottom: screenHeight * 0.0),
+              //  vertical: screenHeight * 0.1),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Tasks",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SetTimer(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.02,
+                  ),
+                  SingleChildScrollView(
+                    child: FutureBuilder(
+                        future: _tasksService.getAllTask(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<TaskModel>> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return Column(
+                              children: [
+                                Container(
+                                  height: screenHeight * 0.65,
+                                  // color: Colors.blue,
+                                  width: screenWidth * 1,
+                                  child: ValueListenableBuilder(
+                                      valueListenable:
+                                          Hive.box<TaskModel>('taskBox')
+                                              .listenable(),
+                                      builder: (context, box, _) {
+                                        return ListView.builder(
+                                            itemCount: box.values.length,
+                                            itemBuilder: (context, index) {
+                                              var tasks = box.getAt(index);
+                                              return ListTile(
+                                                title: Text(tasks!.title),
+                                                leading: Text(
+                                                    formatTime(tasks.time)),
+                                                trailing: IconButton(
+                                                    onPressed: () {
+                                                      _tasksService
+                                                          .deleteTask(index);
+                                                      // print("deleted");
+                                                    },
+                                                    icon: const Icon(
+                                                        Icons.delete)),
+                                              );
+                                            });
+                                      }),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        }),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+                left: screenWidth * 0.05,
+                right: screenWidth * 0.05,
+                top: screenHeight * 0.06,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                )),
+          ],
+        ));
   }
 }
