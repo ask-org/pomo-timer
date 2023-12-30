@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:pomo_timer/pages/about_us.dart';
 import 'package:pomo_timer/pages/add_task.dart';
 
 class TimerPage extends StatefulWidget {
-  // take a few other parameters like title, description, etc. in the constructor
   const TimerPage({this.task, this.time}) : super(key: null);
-  // const TimerPage({Key? key}) : super(key: key);
   final String? task;
   final int? time;
 
@@ -16,13 +15,15 @@ class TimerPage extends StatefulWidget {
 
 class _TimerPageState extends State<TimerPage> {
   late Timer _timer;
-  static const _defaultTime = 2000;
+  static const _defaultTime = 300;
   int _totalSeconds = 0;
   bool _isTimerRunning = false;
+  String _task = '';
 
   @override
   void initState() {
     super.initState();
+    _task = widget.task ?? '';
     _totalSeconds = widget.time ?? _defaultTime;
   }
 
@@ -44,14 +45,6 @@ class _TimerPageState extends State<TimerPage> {
     }
     setState(() {
       _isTimerRunning = !_isTimerRunning;
-    });
-  }
-
-  void _resetTimer() {
-    _timer.cancel();
-    setState(() {
-      _totalSeconds = _defaultTime;
-      _isTimerRunning = false;
     });
   }
 
@@ -87,13 +80,25 @@ class _TimerPageState extends State<TimerPage> {
                   onTap: _toggleTimer,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      _formatTime(_totalSeconds),
-                      style: TextStyle(
-                        fontSize: timerFontSize,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w100,
-                      ),
+                    child: Column(
+                      children: [
+                        Text(
+                          _formatTime(_totalSeconds),
+                          style: TextStyle(
+                            fontSize: timerFontSize,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w100,
+                          ),
+                        ),
+                        Text(
+                          _task,
+                          style: const TextStyle(
+                            fontSize: 30,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w100,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -114,24 +119,49 @@ class _TimerPageState extends State<TimerPage> {
           Positioned(
             right: screenWidth * 0.05,
             top: screenHeight * 0.06,
+            bottom: screenHeight * 0.03,
             child: _isTimerRunning == false
-                ? IconButton(
-                    icon: CircleAvatar(
-                      backgroundColor: Colors.grey[900],
-                      radius: 20,
-                      child: const Icon(
-                        Icons.edit,
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AddTask(),
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: CircleAvatar(
+                          backgroundColor: Colors.grey[900],
+                          radius: 20,
+                          child: const Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                          ),
                         ),
-                      );
-                    },
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddTask(),
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: CircleAvatar(
+                          backgroundColor: Colors.grey[900],
+                          radius: 12,
+                          child: const Icon(
+                            Icons.person,
+                            size: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AboutUs(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   )
                 : Container(),
           ),
