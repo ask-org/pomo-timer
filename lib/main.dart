@@ -9,6 +9,7 @@ import 'package:pomo_timer/time.dart';
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TaskModelAdapter());
+  // await Hive.openBox<TaskModel>("taskBox");
   runApp(MyApp());
 }
 
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SetTimer(),
+      home: TimerPage(),
     );
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:pomo_timer/models/tasks_model.dart';
 import 'package:pomo_timer/models/tasks_service.dart';
 import 'package:pomo_timer/pages/set_timer.dart';
+import 'package:pomo_timer/widgets/task_list.dart';
 
 class AddTask extends StatefulWidget {
   const AddTask({super.key});
@@ -21,7 +23,7 @@ class _AddTaskState extends State<AddTask> {
   }
 
   void openBox() async {
-    await Hive.openBox('taskBox');
+    await Hive.openBox<TaskModel>('taskBox');
   }
 
   @override
@@ -38,51 +40,11 @@ class _AddTaskState extends State<AddTask> {
         backgroundColor: Colors.black,
         body: FutureBuilder(
             future: _tasksService.getAllTask(),
-            builder: (BuildContext context, snapshot) {
+            builder: (BuildContext context,
+                AsyncSnapshot<List<TaskModel>> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                return Column(
-                  children: [
-                    Container(
-                      height: 25,
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                        onPressed: () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SetTimer(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    Container(
-                      height: deviceHeight * 0.8,
-                      width: deviceWidth * 1,
-                      child: ValueListenableBuilder(
-                          valueListenable: Hive.box('taskBox').listenable(),
-                          builder: (context, box, _) {
-                            return ListView.builder(
-                                itemCount: box.values.length,
-                                itemBuilder: (context, index) {
-                                  var tasks = box.getAt(index);
-                                  return ListTile(
-                                    title: Text(tasks!.title),
-                                    leading: Text(formatTime(tasks!.time)),
-                                    trailing: IconButton(
-                                        onPressed: () {
-                                          _tasksService.deleteTask(index);
-                                        },
-                                        icon: Icon(Icons.delete)),
-                                  );
-                                });
-                          }),
-                    ),
-                  ],
-                );
+                return TaskList(context, deviceHeight, deviceWidth, formatTime,
+                    _tasksService);
               } else {
                 return CircularProgressIndicator();
               }

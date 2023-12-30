@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:pomo_timer/models/tasks_model.dart';
 import 'package:pomo_timer/models/tasks_service.dart';
 
@@ -31,12 +30,15 @@ class SetTimerState extends State<SetTimer> {
       await _tasksService.addTask(tasks);
       print('Info retrieved from box: $time');
       print('Info retrieved from box: $title');
-      Navigator.pop(context);
-      print("What the fuzz ${tasks}");
     } else {
-      // Navigator.of(context).pop();
-      Navigator.pop(context);
+      print("the fuzz there is nothing");
     }
+  }
+
+  @override
+  void dispose() {
+    taskController.dispose();
+    super.dispose();
   }
 
   @override
@@ -49,21 +51,38 @@ class SetTimerState extends State<SetTimer> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: ElevatedButton(
-          onLongPress: () async {
-            await Hive.box('task_box').put('title', taskController.text);
-          },
           onPressed: () async {
-            saveAndPop(context);
-            log(taskController.text);
-            log(time.toString());
+            Navigator.pop(context);
           },
-          child: Text("<"),
+          child: Text(
+            "<",
+            style: TextStyle(fontSize: 30),
+          ),
         ),
         actions: [
           Text(
             taskController.text,
             style: TextStyle(color: Colors.white),
-          )
+          ),
+          // save button
+          IconButton(
+            icon: const Icon(
+              Icons.save,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              saveAndPop(context);
+              log(taskController.text);
+              log(time.toString());
+            },
+            // onPressed: () async {
+            //   if (taskController.text.isNotEmpty) {
+            //     var tasks = TaskModel(time: time, title: taskController.text);
+            //     await _tasksService.addTask(tasks);
+            //   }
+            //   Navigator.of(context).pop();
+            // },
+          ),
         ],
       ),
       body: Container(
