@@ -12,13 +12,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // _navigateToHome();
+    _navigateToHome();
   }
 
   _navigateToHome() async {
     await Future.delayed(Duration(milliseconds: 2000), () {});
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => TimerPage()));
+        context, MaterialPageRoute(builder: (context) => const TimerPage()));
   }
 
   @override
@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               height: screenHeight * 0.42,
               width: screenWidth * 0.9,
               child: ClipRRect(
@@ -42,24 +42,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
               ),
             ),
-            Text(
-              "By",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            Container(
-              height: screenHeight * 0.26,
-              width: screenWidth * 0.56,
-              child: Image.asset(
-                "assets/images/ask_dev.jpeg",
-                fit: BoxFit.fill,
-              ),
-              // child: Text("ASK DEV",
-              //     style: TextStyle(color: Colors.white, fontSize: 20)),
-            )
           ],
         ),
       ),
     );
-    ;
   }
 }

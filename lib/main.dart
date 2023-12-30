@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:pomo_timer/models/tasks_model.dart';
-import 'package:pomo_timer/pages/about_us.dart';
 import 'package:pomo_timer/pages/splash_screen.dart';
 
 void main() async {
@@ -17,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AboutUs(),
+      home: SplashScreen(),
     );
   }
 }
