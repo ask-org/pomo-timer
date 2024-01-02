@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:pomo_timer/models/tasks_service.dart';
 import 'package:pomo_timer/pages/about_us.dart';
 import 'package:pomo_timer/pages/add_task.dart';
 
@@ -19,6 +20,8 @@ class _TimerPageState extends State<TimerPage> {
   int _totalSeconds = 0;
   bool _isTimerRunning = false;
   String _task = '';
+
+  final TasksService _tasksService = TasksService();
 
   @override
   void initState() {
