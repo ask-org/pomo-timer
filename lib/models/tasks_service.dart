@@ -21,6 +21,11 @@ class TasksService {
     await box.deleteAt(index);
   }
 
+  Future<void> updateTask(int index, TaskModel taskModel) async {
+    var box = await _box;
+    await box.putAt(index, taskModel);
+  }
+
   // Future<void> updateTask (int index, TaskModel taskModel) async {
   //   var box = await _box;
   //   taskModel.isCompleted = !taskModel.isCompleted;

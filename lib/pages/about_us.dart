@@ -8,7 +8,7 @@ class AboutUs extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    var White = Colors.white;
+    var textColor = Colors.white;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -36,7 +36,7 @@ class AboutUs extends StatelessWidget {
                   Text(
                     "About",
                     style: TextStyle(
-                        color: White,
+                        color: textColor,
                         fontSize: 25,
                         fontWeight: FontWeight.bold),
                   ),
@@ -61,7 +61,7 @@ class AboutUs extends StatelessWidget {
                         ),
                         Text(
                           "Time Untill \nBy ASK Dev",
-                          style: TextStyle(color: White, fontSize: 25),
+                          style: TextStyle(color: textColor, fontSize: 25),
                         ),
                       ],
                     ),
@@ -72,7 +72,7 @@ class AboutUs extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.info,
-                          color: White,
+                          color: textColor,
                           size: 28,
                         ),
                         const SizedBox(
@@ -82,7 +82,7 @@ class AboutUs extends StatelessWidget {
                           children: [
                             Text(
                               "version",
-                              style: TextStyle(color: White, fontSize: 20),
+                              style: TextStyle(color: textColor, fontSize: 20),
                             ),
                             const SizedBox(
                               width: 10,
@@ -112,7 +112,7 @@ class AboutUs extends StatelessWidget {
                         ),
                         Text(
                           "Source code",
-                          style: TextStyle(color: White, fontSize: 18),
+                          style: TextStyle(color: textColor, fontSize: 18),
                         )
                       ],
                     ),
@@ -123,7 +123,7 @@ class AboutUs extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.mail,
-                          color: White,
+                          color: textColor,
                           size: 28,
                         ),
                         const SizedBox(
@@ -131,7 +131,7 @@ class AboutUs extends StatelessWidget {
                         ),
                         Text(
                           "Feedback",
-                          style: TextStyle(color: White, fontSize: 18),
+                          style: TextStyle(color: textColor, fontSize: 18),
                         )
                       ],
                     ),
@@ -142,7 +142,7 @@ class AboutUs extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.star,
-                          color: White,
+                          color: textColor,
                           size: 28,
                         ),
                         const SizedBox(
@@ -150,7 +150,7 @@ class AboutUs extends StatelessWidget {
                         ),
                         Text(
                           "Rate this app",
-                          style: TextStyle(color: White, fontSize: 18),
+                          style: TextStyle(color: textColor, fontSize: 18),
                         )
                       ],
                     ),
@@ -161,7 +161,7 @@ class AboutUs extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.file_download,
-                          color: White,
+                          color: textColor,
                           size: 28,
                         ),
                         const SizedBox(
@@ -169,7 +169,7 @@ class AboutUs extends StatelessWidget {
                         ),
                         Text(
                           "Other apps",
-                          style: TextStyle(color: White, fontSize: 18),
+                          style: TextStyle(color: textColor, fontSize: 18),
                         )
                       ],
                     ),
@@ -180,7 +180,7 @@ class AboutUs extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.web,
-                          color: White,
+                          color: textColor,
                           size: 28,
                         ),
                         const SizedBox(
@@ -188,7 +188,7 @@ class AboutUs extends StatelessWidget {
                         ),
                         Text(
                           "Visit our website",
-                          style: TextStyle(color: White, fontSize: 18),
+                          style: TextStyle(color: textColor, fontSize: 18),
                         )
                       ],
                     ),

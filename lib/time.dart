@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+// import 'package:pomo_timer/models/tasks_service.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:pomo_timer/pages/about_us.dart';
 import 'package:pomo_timer/pages/add_task.dart';
 
@@ -20,6 +22,8 @@ class _TimerPageState extends State<TimerPage> {
   bool _isTimerRunning = false;
   String _task = '';
 
+  // final TasksService _tasksService = TasksService();
+
   @override
   void initState() {
     super.initState();
@@ -27,10 +31,19 @@ class _TimerPageState extends State<TimerPage> {
     _totalSeconds = widget.time ?? _defaultTime;
   }
 
-  void _toggleTimer() {
+  void _toggleTimer() async {
     if (_isTimerRunning) {
       _timer.cancel();
     } else {
+      FlutterBackgroundService().invoke('setAsBackground');
+      final service = FlutterBackgroundService();
+      bool isRunning = await service.isRunning();
+      if (isRunning) {
+        service.invoke('stopService');
+      } else {
+        service.startService();
+      }
+
       const oneSec = Duration(seconds: 1);
       _timer = Timer.periodic(oneSec, (Timer timer) {
         setState(() {
@@ -103,16 +116,6 @@ class _TimerPageState extends State<TimerPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Align(
-                //   alignment: Alignment.center,
-                //   child: ElevatedButton(
-                //     onPressed: _resetTimer,
-                //     style: ElevatedButton.styleFrom(
-                //       textStyle: const TextStyle(fontWeight: FontWeight.normal),
-                //     ),
-                //     child: const Text('Reset Timer'),
-                //   ),
-                // ),
               ],
             ),
           ),
