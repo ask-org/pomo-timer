@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:pomo_timer/models/tasks_model.dart';
@@ -101,41 +99,47 @@ class _AddTaskState extends State<AddTask> {
                                             itemCount: box.values.length,
                                             itemBuilder: (context, index) {
                                               var tasks = box.getAt(index);
-                                              return InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          TimerPage(
-                                                        task: tasks.title,
-                                                        time: tasks.time,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                onLongPress: () {
-                                                  Timer(
-                                                      const Duration(
-                                                          seconds: 1), () {
+                                              return Dismissible(
+                                                background: Container(
+                                                  color: Colors.red,
+                                                ),
+                                                key: ValueKey(index),
+                                                onDismissed: (DismissDirection
+                                                    direction) {
+                                                  setState(() {
                                                     _tasksService
                                                         .deleteTask(index);
                                                   });
                                                 },
-                                                child: ListTile(
-                                                  title: Text(tasks!.title,
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: const TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.grey,
-                                                      )),
-                                                  leading: Text(
-                                                      formatTime(tasks.time),
-                                                      style: const TextStyle(
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            TimerPage(
+                                                          task: tasks.title,
+                                                          time: tasks.time,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: ListTile(
+                                                    title: Text(tasks!.title,
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
                                                           fontSize: 14,
-                                                          color: Colors.white)),
+                                                          color: Colors.grey,
+                                                        )),
+                                                    leading: Text(
+                                                        formatTime(tasks.time),
+                                                        style: const TextStyle(
+                                                            fontSize: 14,
+                                                            color:
+                                                                Colors.white)),
+                                                  ),
                                                 ),
                                               );
                                             });
