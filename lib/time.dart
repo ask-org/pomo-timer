@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
-// import 'package:pomo_timer/models/tasks_service.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter/services.dart';
 import 'package:pomo_timer/pages/about_us.dart';
 import 'package:pomo_timer/pages/add_task.dart';
 
@@ -16,13 +16,36 @@ class TimerPage extends StatefulWidget {
 }
 
 class _TimerPageState extends State<TimerPage> {
+
+  _PatternVibrate() {
+    HapticFeedback.mediumImpact();
+
+    sleep(
+      const Duration(milliseconds: 200),
+    );
+    print("vibrating?");
+
+    HapticFeedback.mediumImpact();
+
+    sleep(
+      const Duration(milliseconds: 500),
+    );
+    print("vibrating?");
+
+    HapticFeedback.mediumImpact();
+
+    sleep(
+      const Duration(milliseconds: 200),
+    );
+    print("vibrating?");
+    HapticFeedback.mediumImpact();
+  }
+
   late Timer _timer;
   static const _defaultTime = 300;
   int _totalSeconds = 0;
   bool _isTimerRunning = false;
   String _task = '';
-
-  // final TasksService _tasksService = TasksService();
 
   @override
   void initState() {
@@ -35,14 +58,6 @@ class _TimerPageState extends State<TimerPage> {
     if (_isTimerRunning) {
       _timer.cancel();
     } else {
-      FlutterBackgroundService().invoke('setAsBackground');
-      final service = FlutterBackgroundService();
-      bool isRunning = await service.isRunning();
-      if (isRunning) {
-        service.invoke('stopService');
-      } else {
-        service.startService();
-      }
 
       const oneSec = Duration(seconds: 1);
       _timer = Timer.periodic(oneSec, (Timer timer) {
@@ -50,12 +65,14 @@ class _TimerPageState extends State<TimerPage> {
           if (_totalSeconds == 0) {
             timer.cancel();
             _isTimerRunning = false;
+            _PatternVibrate();
           } else {
             _totalSeconds--;
           }
         });
       });
     }
+    
     setState(() {
       _isTimerRunning = !_isTimerRunning;
     });
