@@ -18,7 +18,7 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
     };
     return TaskModel(
       time: fields[0] as int,
-      title: fields[1] == null ? false : fields[1],
+      title: fields[1] ?? false,
       // title: fields[1] == null ? false : fields[1] as String,
     );
   }
