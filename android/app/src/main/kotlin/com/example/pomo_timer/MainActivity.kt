@@ -1,4 +1,4 @@
-package com.example.pomo_timer
+package com.askdev.timeuntill
 
 import io.flutter.embedding.android.FlutterActivity
 
