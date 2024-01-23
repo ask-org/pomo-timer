@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="pomo_timer"
+        android:label="Time Untill"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
