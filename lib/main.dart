@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pomo_timer/models/tasks_model.dart';
@@ -6,6 +7,7 @@ import 'package:pomo_timer/pages/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack, overlays: []);
   await Permission.notification.isDenied.then((value) {
     if (value) {
       Permission.notification.request();
