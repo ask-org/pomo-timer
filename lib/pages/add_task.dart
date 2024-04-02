@@ -101,7 +101,8 @@ class _AddTaskState extends State<AddTask> {
                                               var tasks = box.getAt(index);
                                               return Dismissible(
                                                 background: Container(
-                                                  color: Color.fromARGB(255, 176, 75, 61),
+                                                  color: const Color.fromARGB(
+                                                      255, 176, 75, 61),
                                                 ),
                                                 key: ValueKey(index),
                                                 onDismissed: (DismissDirection

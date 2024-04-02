@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pomo_timer/pages/about_us.dart';
 import 'package:pomo_timer/pages/add_task.dart';
+import 'package:vibration/vibration.dart';
 
 class TimerPage extends StatefulWidget {
   const TimerPage({this.task, this.time}) : super(key: null);
@@ -16,29 +15,11 @@ class TimerPage extends StatefulWidget {
 }
 
 class _TimerPageState extends State<TimerPage> {
-
-  _PatternVibrate() {
-    HapticFeedback.mediumImpact();
-
-    sleep(
-      const Duration(milliseconds: 200),
+  void vibrateOnFinish() {
+    Vibration.vibrate(
+      pattern: [500, 1000, 500, 1000, 500, 1000],
+      intensities: [0, 64, 0, 64, 0, 64],
     );
-    print("vibrating?");
-
-    HapticFeedback.mediumImpact();
-
-    sleep(
-      const Duration(milliseconds: 500),
-    );
-    print("vibrating?");
-
-    HapticFeedback.mediumImpact();
-
-    sleep(
-      const Duration(milliseconds: 200),
-    );
-    print("vibrating?");
-    HapticFeedback.mediumImpact();
   }
 
   late Timer _timer;
@@ -58,21 +39,20 @@ class _TimerPageState extends State<TimerPage> {
     if (_isTimerRunning) {
       _timer.cancel();
     } else {
-
       const oneSec = Duration(seconds: 1);
       _timer = Timer.periodic(oneSec, (Timer timer) {
         setState(() {
           if (_totalSeconds == 0) {
             timer.cancel();
             _isTimerRunning = false;
-            _PatternVibrate();
+            vibrateOnFinish();
           } else {
             _totalSeconds--;
           }
         });
       });
     }
-    
+
     setState(() {
       _isTimerRunning = !_isTimerRunning;
     });

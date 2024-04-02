@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "960237927749",
+    "project_id": "time-untill-97c5e",
+    "storage_bucket": "time-untill-97c5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960237927749:android:a156e57c20fe92bf73122c",
+        "android_client_info": {
+          "package_name": "com.askdev.timeuntill"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCV5rgNZ_EkVnSbXb6XxHPC7T2Xd7ea7iw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
