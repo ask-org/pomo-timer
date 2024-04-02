@@ -70,6 +70,27 @@ class AboutUs extends StatelessWidget {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                            height: 35,
+                            width: 35,
+                            child: Image.asset(
+                              "assets/images/github.png",
+                              fit: BoxFit.fill,
+                            )),
+                        const SizedBox(
+                          width: 25,
+                        ),
+                        Text(
+                          "Source code",
+                          style: TextStyle(color: textColor, fontSize: 18),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
                         Icon(
                           Icons.info,
                           color: textColor,
@@ -94,26 +115,6 @@ class AboutUs extends StatelessWidget {
                             )
                           ],
                         ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          height: 28,
-                          width: 28,
-                          child: Image.network(
-                              'https://avatars.githubusercontent.com/u/9919?s=280&v=4'),
-                        ),
-                        const SizedBox(
-                          width: 25,
-                        ),
-                        Text(
-                          "Source code",
-                          style: TextStyle(color: textColor, fontSize: 18),
-                        )
                       ],
                     ),
                     const SizedBox(
